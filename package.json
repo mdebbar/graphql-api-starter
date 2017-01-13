@@ -1,0 +1,22 @@
+{
+  "name": "kino-api",
+  "version": "0.0.1",
+  "description": "API for the Kino App.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "graphql": "^0.8.2",
+    "graphql-server-express": "^0.5.0",
+    "graphql-tools": "^0.9.0",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.13.1"
+  }
+}
