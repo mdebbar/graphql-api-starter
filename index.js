@@ -7,23 +7,27 @@ const schema = require('./schema')
 
 const PORT = 4000
 
-var app = express()
+const app = express()
 
+// DEV_ONLY
+// Logging in dev mode
 app.use(morgan('dev'))
 
-// FIXES CORS ERROR
-var whitelist = [
-    'http://localhost:3000',
+// TODO: After we implement authentication, we shouldn't need a whitelist.
+//       We can just enable CORS for *
+const whitelist = [
+  'http://localhost:3000',
 ]
-var corsOptions = {
-    origin: function(origin, callback){
-        var originIsWhitelisted = whitelist.indexOf(origin) !== -1
-        callback(null, originIsWhitelisted)
-    },
-    credentials: true,
+
+const corsOptions = {
+  origin: function(origin, callback) {
+    const originIsWhitelisted = whitelist.indexOf(origin) !== -1
+    callback(null, originIsWhitelisted)
+  },
 }
 app.use(cors(corsOptions))
 
+// GraphQL and GraphiQL endpoints.
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
