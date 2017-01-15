@@ -1,4 +1,10 @@
+### Prerequisites
+
+- node: at least version 5
+- npm: version 3
+
 ### Setup:
+
 This is a simple nodejs/npm project and the setup is straight forward. All you need to do is run `npm install` and you are ready to go.
 
 ### Start the server:

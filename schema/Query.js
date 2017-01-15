@@ -4,6 +4,7 @@ exports.schema = `
   type Query {
     users: [User]
     comments: [Comment]
+    commentsByUser(user_id: Int): [Comment]
   }
 `
 
@@ -14,6 +15,9 @@ exports.resolvers = {
     },
     comments() {
       return comments
+    },
+    commentsByUser(_, { user_id }) {
+      return comments.filter(c => c.user_id === user_id)
     },
   },
 }

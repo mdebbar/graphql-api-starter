@@ -11,7 +11,7 @@ exports.schema = `
 exports.resolvers = {
   Comment: {
     user(comment) {
-      return users.find(a => a.id === comment.userId)
+      return users.find(u => u.id === comment.user_id)
     },
   },
 }

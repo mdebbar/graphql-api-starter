@@ -5,7 +5,10 @@ const cors = require('cors')
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express')
 const schema = require('./schema')
 
-const PORT = 4000
+let PORT = 4000
+if (process.env.PORT) {
+  PORT = parseInt(process.env.PORT, 10)
+}
 
 const app = express()
 
@@ -31,4 +34,7 @@ app.use(cors(corsOptions))
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
-app.listen(PORT)
+// DEV_ONLY
+// Start listening to port...
+// eslint-disable-next-line no-console
+app.listen(PORT, () => console.log(`API Server is now running on http://localhost:${PORT}`))
