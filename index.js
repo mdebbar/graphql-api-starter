@@ -1,8 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
 const cors = require('cors')
-const { graphqlExpress, graphiqlExpress } = require('graphql-server-express')
+const graphqlHTTP = require('express-graphql')
 const schema = require('./schema')
 
 let PORT = 4000
@@ -30,9 +29,16 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
-// GraphQL and GraphiQL endpoints.
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
+console.log('----- Full Schema -----\n')
+console.log(require('graphql').printSchema(schema))
+console.log('----- End Schema -----\n')
+
+// Setup GraphQL endpoint.
+app.use('/graphql', graphqlHTTP({
+  schema,
+  // DEV_ONLY ?
+  graphiql: true,
+}))
 
 // DEV_ONLY
 // Start listening to port...

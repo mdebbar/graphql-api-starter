@@ -16,26 +16,30 @@ module.exports = {
     email: 'j@j.j',
   }],
 
-  videos: [{
-    id: 1001,
-    owner_id: 101,
-    name: 'Random Video',
-  }],
-
   comments: [{
     id: 200,
     user_id: 102,
-    video_id: 15,
+    video_id: 301,
     text: 'Negative comment text..',
   }, {
     id: 201,
     user_id: 101,
-    video_id: 21,
+    video_id: 301,
     text: 'Positive comment here :)',
   }, {
     id: 202,
     user_id: 102,
-    video_id: 15,
+    video_id: 300,
     text: 'Yet another negative comment :(',
+  }],
+
+  videos: [{
+    id: 300,
+    owner_id: 101,
+    name: 'Random Video',
+  }, {
+    id: 301,
+    owner_id: 102,
+    name: 'Another Random Video',
   }],
 }
