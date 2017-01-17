@@ -1,14 +1,13 @@
+const { registerAsNode } = require('./NodeInterface')
 const {
   GraphQLObjectType,
   GraphQLList,
   GraphQLString,
-  GraphQLInt,
   GraphQLFloat,
 } = require('graphql')
 
 
 const fields = () => ({
-  id: { type: GraphQLInt },
   name: { type: GraphQLString },
   uploaded: { type: GraphQLFloat },
   owner: {
@@ -23,8 +22,16 @@ const fields = () => ({
   },
 })
 
-module.exports = new GraphQLObjectType({
+const VideoType = new GraphQLObjectType({
   name: 'Video',
   description: 'An uploaded video',
   fields,
 })
+
+registerAsNode(VideoType, {
+  isTypeOf: (obj) => obj.hasOwnProperty('owner_id'),
+  resolveId: (id, { loaders }) => loaders.video.load(id),
+})
+
+
+module.exports = VideoType

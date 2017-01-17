@@ -40,6 +40,12 @@ const graphqlEndpoint = graphqlHTTP(() => ({
   context: { loaders: createLoaders() },
   // DEV_ONLY ?
   graphiql: true,
+  // DEV_ONLY
+  formatError: error => ({
+    message: error.message,
+    locations: error.locations,
+    stack: error.stack,
+  }),
 }))
 app.use('/graphql', graphqlEndpoint)
 

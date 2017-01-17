@@ -1,11 +1,13 @@
+const { nodeField } = require('./NodeInterface')
 const {
   GraphQLObjectType,
   GraphQLList,
-  GraphQLInt,
+  GraphQLString,
 } = require('graphql')
 
 
 const fields = () => ({
+  node: nodeField,
   users: {
     type: new GraphQLList(require('./UserType')),
     resolve: (root, args, { loaders }) =>
@@ -14,7 +16,7 @@ const fields = () => ({
   getUser: {
     type: require('./UserType'),
     args: {
-      id: { type: GraphQLInt },
+      id: { type: GraphQLString },
     },
     resolve: (root, { id }, { loaders }) =>
       loaders.user.load(id),

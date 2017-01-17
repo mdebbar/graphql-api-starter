@@ -1,13 +1,12 @@
+const { registerAsNode } = require('./NodeInterface')
 const {
   GraphQLObjectType,
   GraphQLList,
   GraphQLString,
-  GraphQLInt,
 } = require('graphql')
 
 
 const fields = () => ({
-  id: { type: GraphQLInt },
   email: { type: GraphQLString },
   firstName: {
     type: GraphQLString,
@@ -29,8 +28,16 @@ const fields = () => ({
   },
 })
 
-module.exports = new GraphQLObjectType({
+const UserType = new GraphQLObjectType({
   name: 'User',
   description: 'A user of the system',
   fields,
 })
+
+registerAsNode(UserType, {
+  isTypeOf: (obj) => obj.hasOwnProperty('email'),
+  resolveId: (id, { loaders }) => loaders.user.load(id),
+})
+
+
+module.exports = UserType
