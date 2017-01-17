@@ -2,6 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const graphqlHTTP = require('express-graphql')
+const createLoaders = require('./createLoaders')
 const schema = require('./schema')
 
 let PORT = 4000
@@ -34,11 +35,13 @@ console.log(require('graphql').printSchema(schema))
 console.log('----- End Schema -----\n')
 
 // Setup GraphQL endpoint.
-app.use('/graphql', graphqlHTTP({
+const graphqlEndpoint = graphqlHTTP(() => ({
   schema,
+  context: { loaders: createLoaders() },
   // DEV_ONLY ?
   graphiql: true,
 }))
+app.use('/graphql', graphqlEndpoint)
 
 // DEV_ONLY
 // Start listening to port...

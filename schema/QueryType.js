@@ -1,4 +1,3 @@
-const data = require('./mock-data')
 const {
   GraphQLObjectType,
   GraphQLList,
@@ -9,16 +8,16 @@ const {
 const fields = () => ({
   users: {
     type: new GraphQLList(require('./UserType')),
-    resolve: () => data.users,
+    resolve: (root, args, { loaders }) =>
+      loaders.allUsers.load('__all__'),
   },
   getUser: {
     type: require('./UserType'),
     args: {
       id: { type: GraphQLInt },
     },
-    resolve: (root, { id }) => {
-      return data.users.find(u => u.id === id)
-    },
+    resolve: (root, { id }, { loaders }) =>
+      loaders.user.load(id),
   },
 })
 

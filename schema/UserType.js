@@ -1,4 +1,3 @@
-const data = require('./mock-data')
 const {
   GraphQLObjectType,
   GraphQLList,
@@ -20,11 +19,13 @@ const fields = () => ({
   },
   comments: {
     type: new GraphQLList(require('./CommentType')),
-    resolve: (user) => data.comments.filter(c => c.user_id === user.id),
+    resolve: (user, args, { loaders }) =>
+      loaders.userComments.load(user.id),
   },
   videos: {
     type: new GraphQLList(require('./VideoType')),
-    resolve: (user) => data.videos.filter(v => v.owner_id === user.id),
+    resolve: (user, args, { loaders }) =>
+      loaders.userVideos.load(user.id),
   },
 })
 

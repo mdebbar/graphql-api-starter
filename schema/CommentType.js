@@ -1,4 +1,3 @@
-const data = require('./mock-data')
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -11,11 +10,13 @@ const fields = () => ({
   text: { type: GraphQLString },
   user: {
     type: require('./UserType'),
-    resolve: (comment) => data.users.find(u => u.id === comment.user_id),
+    resolve: (comment, args, { loaders }) =>
+      loaders.user.load(comment.user_id),
   },
   video: {
     type: require('./VideoType'),
-    resolve: (comment) => data.videos.find(v => v.id === comment.video_id),
+    resolve: (comment, args, { loaders }) =>
+      loaders.video.load(comment.video_id),
   },
 })
 
