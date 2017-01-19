@@ -1,18 +1,19 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const graphqlHTTP = require('express-graphql')
+const bodyParser = require('body-parser')
+const { graphqlExpress, graphiqlExpress } = require('graphql-server-express')
+
 const createLoaders = require('./createLoaders')
 const schema = require('./schema')
 
-let PORT = 4000
-if (process.env.PORT) {
-  PORT = parseInt(process.env.PORT, 10)
-}
+
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000
 
 const app = express()
+const schemaString = require('graphql').printSchema(schema)
 
-// DEV_ONLY
+// DEV_ONLY?
 // Logging in dev mode
 app.use(morgan('dev'))
 
@@ -22,23 +23,30 @@ const whitelist = [
   'http://localhost:3000',
 ]
 
-const corsOptions = {
+/**
+ * Enable CORS for the whitelisted origins.
+ */
+app.use(cors({
   origin: function(origin, callback) {
     const originIsWhitelisted = whitelist.indexOf(origin) !== -1
     callback(null, originIsWhitelisted)
   },
-}
-app.use(cors(corsOptions))
+}))
 
-console.log('----- Full Schema -----\n')
-console.log(require('graphql').printSchema(schema))
-console.log('----- End Schema -----\n')
+/**
+ * Expose the raw schema text at /schema
+ */
+app.get('/schema', (req, res) => {
+  res.set('Content-Type', 'text/plain')
+  res.send(schemaString)
+})
 
-// Setup GraphQL endpoint.
-const graphqlEndpoint = graphqlHTTP(() => ({
-  schema,
+/**
+ * Create the GraphQL endpoint handler.
+ */
+const graphqlEndpoint = graphqlExpress(() => ({
+  schema: schema,
   context: { loaders: createLoaders() },
-  // DEV_ONLY ?
   graphiql: true,
   // DEV_ONLY
   formatError: error => ({
@@ -47,7 +55,12 @@ const graphqlEndpoint = graphqlHTTP(() => ({
     stack: error.stack,
   }),
 }))
-app.use('/graphql', graphqlEndpoint)
+
+/**
+ * Expose the GraphQL API and the GraphiQL tool.
+ */
+app.use('/graphql', bodyParser.json(), graphqlEndpoint)
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
 // DEV_ONLY
 // Start listening to port...
