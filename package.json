@@ -5,7 +5,8 @@
   "repository": "bitbucket:kino-app/api",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "NODE_ENV=development node index.js",
+    "prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {
     "body-parser": "^1.16.0",
