@@ -13,6 +13,10 @@ const fields = () => ({
     resolve: (root, args, { loaders }) =>
       loaders.allUsers.load('__all__'),
   },
+  me: {
+    type: require('./UserType'),
+    resolve: (root, args, { user }) => user,
+  },
   getUser: {
     type: require('./UserType'),
     args: {

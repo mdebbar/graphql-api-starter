@@ -4,6 +4,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express')
 
+const { authenticate, injectUser } = require('./auth')
 const createLoaders = require('./createLoaders')
 const schema = require('./schema')
 
@@ -36,17 +37,22 @@ app.use(cors({
 /**
  * Expose the raw schema text at /schema
  */
-app.get('/schema', (req, res) => {
-  res.set('Content-Type', 'text/plain')
-  res.send(schemaString)
-})
+if (process.env.NODE_ENV === 'development') {
+  app.get('/schema', (req, res) => {
+    res.set('Content-Type', 'text/plain')
+    res.send(schemaString)
+  })
+}
 
 /**
  * Create the GraphQL endpoint handler.
  */
-const graphqlEndpoint = graphqlExpress(() => ({
+const graphqlEndpoint = graphqlExpress((req) => ({
   schema: schema,
-  context: { loaders: createLoaders() },
+  context: {
+    user: req.user,
+    loaders: createLoaders(),
+  },
   graphiql: true,
   // DEV_ONLY
   formatError: error => ({
@@ -56,11 +62,13 @@ const graphqlEndpoint = graphqlExpress(() => ({
   }),
 }))
 
+
 /**
  * Expose the GraphQL API and the GraphiQL tool.
  */
-app.use('/graphql', bodyParser.json(), graphqlEndpoint)
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
+app.use('/graphql', authenticate, injectUser, bodyParser.json(), graphqlEndpoint)
+// TODO: with the existence of Apollo Chrome extension, do we really need graphiql here?
+app.use('/graphiql', authenticate, graphiqlExpress({ endpointURL: '/graphql' }))
 
 // DEV_ONLY
 // Start listening to port...
