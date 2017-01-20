@@ -68,3 +68,17 @@ registerAsNode(UserType, {
   resolveId: (id) => fetchUserById(id),
 })
 ```
+
+## Configuration and Environment Variables
+
+Ideally, any kind of configuration should be done in environment variables.
+
+### Development mode
+
+In development mode (using `npm start`), all variables in the `.env` file will automatically be loaded and available as `process.env`.
+
+### Production mode
+
+TODO: Figure out where to put environment variables in production. It depends on which hosting provider we decide to go with.
+
+NOTE: the `.env` isn't used in production mode.

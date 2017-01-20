@@ -5,7 +5,7 @@
   "repository": "bitbucket:kino-app/api",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development node index.js",
+    "start": "NODE_ENV=development node -r dotenv/config index.js",
     "prod": "NODE_ENV=production node index.js"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
+    "dotenv": "^4.0.0",
     "eslint": "^3.13.1"
   }
 }
